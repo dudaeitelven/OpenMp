@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 void swap(int *num1, int *num2)
 {
@@ -61,6 +62,8 @@ void OrderWithoutOmp ()
 	int first;
 	double start,end;
 
+	clock_t inicio = clock();
+
 	for( i = 0; i < N-1; i++ )
 	{
 		first = i % 2;
@@ -79,8 +82,10 @@ void OrderWithoutOmp ()
 //		printf(" %d",A[i]);
 //	}
 
+    clock_t fim = clock();
+
     printf("\n-------------------------\n");
-    printf("Time without OMP = %f",(end-start));
+    printf("Time without OMP = %f",(fim-inicio));
 }
 
 int main (int argc, char *argv[]) {
