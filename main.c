@@ -5,90 +5,107 @@
 
 void swap(int *num1, int *num2)
 {
-	int temp = *num1;
-	*num1 =  *num2;
-	*num2 = temp;
+    int temp = *num1;
+    *num1 =  *num2;
+    *num2 = temp;
 }
 
-void OrderWithOmp ()
+void OrderWithOmp (int SIZE)
 {
-    int SIZE =1<<10;
-	int A[SIZE];
+    //int SIZE =1<<10;
+    int A[SIZE];
 
-	for(int i=0;i<SIZE;i++)
-	{
-	    A[i]=rand()%SIZE;
-	}
+    for(int i=0; i<SIZE; i++)
+    {
+        A[i]=rand()%SIZE;
+    }
 
-	int N = SIZE;
-	int i=0, j=0;
-	int first;
-	double start,end;
+    int N = SIZE;
+    int i=0, j=0;
+    int first;
+    double start,end;
 
 //	start=omp_get_wtime();
 
-	for( i = 0; i < N-1; i++ )
-	{
-		first = i % 2;
+    for( i = 0; i < N-1; i++ )
+    {
+        first = i % 2;
 
-		#pragma omp parallel for default(none),shared(A,first,N)
-		for( j = first; j < N-1; j += 1 )
-		{
-			if( A[ j ] > A[ j+1 ] )
-			{
-				swap( &A[ j ], &A[ j+1 ] );
-			}
-		}
-	}
+        #pragma omp parallel for default(none),shared(A,first,N)
+        for( j = first; j < N-1; j += 1 )
+        {
+            if( A[ j ] > A[ j+1 ] )
+            {
+                swap( &A[ j ], &A[ j+1 ] );
+            }
+        }
+    }
 
 //    end=omp_get_wtime();
 
-    printf("\n-------------------------\n");
-    printf("Time with OMP  = %f",(end-start));
+    // printf("\n-------------------------\n");
+    // printf("Time with OMP  = %f",(end-start));
 }
 
-void OrderWithoutOmp ()
+void OrderWithoutOmp (int SIZE)
 {
-    int SIZE =1<<14;
-	int A[SIZE];
+    //int SIZE =1<<14;
+    int A[SIZE];
 
-	for(int i=0;i<SIZE;i++)
-	{
-	    A[i]=rand()%SIZE;
-	}
+    for(int i=0; i<SIZE; i++)
+    {
+        A[i]=rand()%SIZE;
+    }
 
-	int N = SIZE;
-	int i=0, j=0;
-	int first;
-	double start,end;
+    int N = SIZE;
+    int i=0, j=0;
+    int first;
+    double start,end;
 
-	clock_t inicio = clock();
+    //clock_t inicio = clock();
 
-	for( i = 0; i < N-1; i++ )
-	{
-		first = i % 2;
+    for( i = 0; i < N-1; i++ )
+    {
+        first = i % 2;
 
-		for( j = first; j < N-1; j += 1 )
-		{
-			if( A[ j ] > A[ j+1 ] )
-			{
-				swap( &A[ j ], &A[ j+1 ] );
-			}
-		}
-	}
+        for( j = first; j < N-1; j += 1 )
+        {
+            if( A[ j ] > A[ j+1 ] )
+            {
+                swap( &A[ j ], &A[ j+1 ] );
+            }
+        }
+    }
 
 //	for(i=0;i<N;i++)
 //	{
 //		printf(" %d",A[i]);
 //	}
 
-    clock_t fim = clock();
+    //clock_t fim = clock();
 
-    printf("\n-------------------------\n");
-    printf("Time without OMP = %f",(fim-inicio));
+    // printf("\n-------------------------\n");
+    // printf("Time without OMP = %f",(fim-inicio));
 }
 
-int main (int argc, char *argv[]) {
-	OrderWithOmp();
-	OrderWithoutOmp();
+int main (int argc, char *argv[])
+{
+    double   start= 0, stop =0;
+    int size = 1000;
+
+    start = omp_get_wtime();
+    OrderWithOmp(size);
+    stop = omp_get_wtime();
+
+
+    printf("\n-------------------------\n");
+    printf("Time with OMP  = %f",(stop-start));
+
+    start= 0, stop =0;
+    start = omp_get_wtime();
+    OrderWithoutOmp(size);
+    stop = omp_get_wtime();
+    printf("\n-------------------------\n");
+    printf("Time without OMP = %f",(stop-start));
+
 }
